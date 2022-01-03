@@ -1,14 +1,39 @@
-//
-//  main.cpp
-//  OpenCV_Test
-//
-//  Created by Niyazi Babayev on 02.01.22.
-//
-
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/objdetect.hpp>
 #include <iostream>
+#include "VirtualPainter.cpp"
 
-int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
-    return 0;
+using namespace cv;
+using namespace std;
+
+
+VideoCapture cap(0);
+
+
+int main(){
+    
+    Mat img;
+    
+    VirtualPainter *vp = new VirtualPainter(img);
+
+    while (true) {
+
+        
+    cap.read(img);
+        
+    vector<vector<int>> newPoints = vp->getNewPoints();
+        
+    newPoints = vp->findColor(img);
+        
+    vp->drawOnCanvas(newPoints, vp->getMyColorValues());
+
+    imshow("Image", vp->getImg());
+        
+    waitKey(1);
+        
+    }
+    
+    free(vp);
 }
